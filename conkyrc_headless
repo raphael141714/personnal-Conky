@@ -1,0 +1,71 @@
+conky.config = {
+    out_to_console = false,
+    out_to_stderr = false,
+    extra_newline = false,
+    update_interval=1,
+    background=false,
+    text_buffer_size=2048,
+    double_buffer=true,
+    no_buffers=true,
+    use_xft=true,
+    font='Roboto Slab:bold:pixelsize=12',
+    override_utf8_locale=true,
+    own_window=true,
+    own_window_type='desktop',
+    own_window_class='Conky',
+    own_window_hints='undecorated,below,sticky,skip_taskbar,skip_pager',
+    own_window_colour='#444444',
+    own_window_argb_visual = false,
+    minimum_width = 76,
+    maximum_width = 76,
+    alignment = 'top_right',
+    gap_x = 16,
+    gap_y = 40,
+    default_outline_color = 'white',
+    default_shade_color = 'white',
+    lua_load = "~/conky/graphs.lua",
+    lua_draw_hook_pre = 'conky_main',
+    draw_borders = false,
+    draw_graph_borders = true,
+    draw_outline = false,
+    draw_shades = false,
+    border_inner_margin=8,
+    border_outer_margin=0,
+    default_color="#ecf0f1"
+}
+
+conky.text = [[
+${lua conky_TIME_clock 48 48}
+${lua conky_UPTIME_timer 48 128}
+${lua conky_CPU_square 48 208}
+${lua conky_double_RAM_circle 48 288}
+${lua conky_NET_arrows_eth 48 368}
+${lua conky_DISK_cylinder 48 448}
+${lua conky_TEMP_meter 48 528}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]
