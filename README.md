@@ -14,13 +14,11 @@ If you download this as an archive, simply unpack it in `~/`
 You should then have a `~/conky/` folder, and more importantly a `~/conky/graphs.lua` file.   
 Once all that is done, rename `conkyrc`, `conkyrc_wlan0`, `conkyrc_headless` or `conkyrc_headless_wlan0` to `.conkyrc`.   
 It depends on what you want :   
-* conkyrc :    
+* `conkyrc` :    
 ![Image of my Conky](https://github.com/raphael141714/personnal-Conky/blob/master/screen.png)
-* conkyrc_wlan0 :   
+* `conkyrc_wlan0` :   
 ![Image of my Conky](https://github.com/raphael141714/personnal-Conky/blob/master/screen_wlan0.png)
-* conkyrc_headless :   
-![Image of my Conky](https://github.com/raphael141714/personnal-Conky/blob/master/screen_headless.png)
-* conkyrc_headless_wlan0 :   
-![Image of my Conky](https://github.com/raphael141714/personnal-Conky/blob/master/screen_headless_wlan0.png)
+* `conkyrc_headless` or `conkyrc_headless_wlan0`, as the only thing changing is the NET arrows, monitoring `wlan0` or `eth0`:   
+![Image of my Conky](https://github.com/raphael141714/personnal-Conky/blob/master/screen_headless.png)   
 
 Then, just launch `conky` and voilà, it works.
