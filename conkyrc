@@ -1,0 +1,79 @@
+conky.config = {
+    out_to_console = false,
+    out_to_stderr = false,
+    extra_newline = false,
+    update_interval=1,
+    background=false,
+    text_buffer_size=2048,
+    double_buffer=true,
+    no_buffers=true,
+    use_xft=true,
+    font='Roboto Slab:bold:pixelsize=12',
+    override_utf8_locale=true,
+    own_window=true,
+    own_window_type='desktop',
+    own_window_class='Conky',
+    own_window_hints='undecorated,below,sticky,skip_taskbar,skip_pager',
+    own_window_colour='#444444',
+    own_window_argb_visual = false,
+    minimum_width = 250,
+    maximum_width = 250,
+    alignment = 'top_right',
+    gap_x = 16,
+    gap_y = 40,
+    default_outline_color = 'white',
+    default_shade_color = 'white',
+    lua_load = "~/conky/graphs.lua",
+    lua_draw_hook_pre = 'conky_main',
+    draw_borders = false,
+    draw_graph_borders = true,
+    draw_outline = false,
+    draw_shades = false,
+    border_inner_margin=8,
+    border_outer_margin=0,
+    default_color="#ecf0f1"
+}
+
+conky.text = [[
+${offset 80}${voffset 2}${font Roboto Slab:bold:pixelsize=20}Heure ${hr 2}${lua conky_TIME_clock 48 48}
+${offset 80}${voffset -8}${font Roboto Mono:bold:pixelsize=24}${time %H:%M:%S}
+${offset 80}${voffset -16}${font Roboto:pixelsize=12}${time %A %d %B %Y}
+
+${voffset 12}${offset 80}${font Roboto Slab:bold:pixelsize=20}Système ${hr 2}${lua conky_UPTIME_timer 48 148}
+${offset 80}${voffset -10}${font}Uptime : ${font Roboto:pixelsize=12}${uptime}
+${offset 80}${font}Distribution : ${font Roboto Mono:pixelsize=12}${no_update $distribution}
+${offset 80}${font}${no_update $sysname} : ${font Roboto Mono:pixelsize=12}${no_update $kernel}
+
+${offset 80}${voffset 2}${font Roboto Slab:bold:pixelsize=20}CPU ${hr 2}${lua conky_CPU_square 48 246}
+${offset 80}${voffset -7}${cpugraph cpu1 8,84 2980b9 c0392b -t}${cpugraph cpu5 8,84 2980b9 c0392b -t}
+${offset 80}${voffset -19}${cpugraph cpu2 8,84 2980b9 c0392b -t}${cpugraph cpu6 8,84 2980b9 c0392b -t}
+${offset 80}${voffset -19}${cpugraph cpu3 8,84 2980b9 c0392b -t}${cpugraph cpu7 8,84 2980b9 c0392b -t}
+${offset 80}${voffset -19}${cpugraph cpu4 8,84 2980b9 c0392b -t}${cpugraph cpu8 8,84 2980b9 c0392b -t}
+${offset 80}${voffset -15}${cpugraph cpu0 16,168 2980b9 c0392b -t}$font
+
+${offset 80}${voffset 2}${font Roboto Slab:bold:pixelsize=20}RAM ${hr 2}${lua conky_double_RAM_circle 48 338}
+${offset 80}${voffset -10}${font}RAM : ${font Roboto:pixelsize=12}$mem${font} sur $memmax
+${offset 80}${font}En cache : ${font Roboto:pixelsize=12}${cached}${font}
+${offset 80}${font}SWAP : ${font Roboto:pixelsize=12}$swap${font} sur $swapmax
+
+${offset 80}${voffset 2}${font Roboto Slab:bold:pixelsize=20}Ethernet ${hr 2}${lua conky_NET_arrows_eth 48 434}
+${offset 80}${voffset -9}$font${upspeedgraph eth0 12,84 f1c40f f39c12 -t -l}${downspeedgraph eth0 12,84 1abc9c 16a085 -t -l}
+${offset 80}${font}T.U. : ${font Roboto:pixelsize=12}${totalup eth0}$alignr${font}T.D. : ${font Roboto:pixelsize=12}${totaldown eth0}$font
+${offset 80}${font}UP : ${font Roboto:pixelsize=12}${upspeed eth0}$font${alignr}DOWN : ${font Roboto:pixelsize=12}${downspeed eth0}
+
+${offset 80}${voffset 0}${font Roboto Slab:bold:pixelsize=20}Disque ${hr 2}${lua conky_DISK_cylinder 48 532}
+${offset 80}${voffset -10}${font}Lecture : ${font Roboto:pixelsize=12}$diskio_read$alignr${diskiograph_read /dev/sda 16,50 9b59b6 8e44ad -l}
+${voffset -1}${offset 80}${font}Écriture : ${font Roboto:pixelsize=12}$diskio_write$alignr${diskiograph_write /dev/sda 16,50 9b59b6 8e44ad -l}
+${offset 80}${font Roboto:pixelsize=12}${fs_used /} ${font}sur ${font Roboto:pixelsize=12}${fs_size /}$font (${fs_used_perc /}%)
+
+${offset 80}${voffset 4}${font Roboto Slab:bold:pixelsize=20}Températures ${hr 2}${lua conky_TEMP_meter 48 626}
+${offset 82}${voffset -8}${font}CPU : ${font Roboto:pixelsize=12}${acpitemp}°C$alignr${lua_graph conky_getCPUtemp 12,80 3498db 2980b9 100}
+${voffset -3}${offset 82}${font}GPU : ${font Roboto:pixelsize=12}${lua conky_getGPUtemp}°C$alignr${lua_graph conky_getGPUtemp 12,80 2ecc71 27ae60 100}
+${voffset -3}${offset 82}${font}Disque : ${font Roboto:pixelsize=12}${exec hddtemp /dev/sda|awk '{print $NF}'}$alignr${execgraph ~/.conky/disk_temp.sh 12,80 9b59b6 8e44ad 70}$font
+${voffset 12}${font Roboto Slab:bold:pixelsize=20}Processus ${hr 2}
+${font Roboto Mono:bold:pixelsize=12}Nom             ${alignr}PID            ${alignr}%CPU${font Roboto Mono:pixelsize=12}
+${color #3498db} ${top name 1} ${alignr}${top pid 1} ${alignr}${top cpu 1}
+${color #3498db} ${top name 2} ${alignr}${top pid 2} ${alignr}${top cpu 2}
+${color #ecf0f1} ${top name 3} ${alignr}${top pid 3} ${alignr}${top cpu 3}
+${color #ecf0f1} ${top name 4} ${alignr}${top pid 4} ${alignr}${top cpu 4}
+${color #ecf0f1} ${top name 5} ${alignr}${top pid 5} ${alignr}${top cpu 5}]]
