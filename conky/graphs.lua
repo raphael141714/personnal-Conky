@@ -188,8 +188,6 @@ function conky_DISK_cylinder(cx_str, cy_str)
     -- Dessin de l'ellipse du haut
     ellipse (cx - 32.0, cy - 32.0, 64.0, 8.0)
 
-    cairo_set_source_rgba (cr, 236/255, 240/255, 241/255,1)
-    cairo_fill_preserve (cr)
     cairo_set_source_rgba (cr, 127/255, 140/255, 141/255,1)
     cairo_stroke (cr)
 
@@ -236,12 +234,105 @@ function half_upper_ellipse(cx, cy, width, height)
     return
 end
 
-function conky_NET_arrows (cx_str, cy_str)
+function conky_NET_arrows_eth (cx_str, cy_str)
     local cx = tonumber(cx_str) -- absisce du centre de l'icone
     local cy = tonumber(cy_str) -- ordonnee du centre de l'icone
 
-    local downspeed = tonumber(conky_parse("${downspeedf wlan0}")) + tonumber(conky_parse("${downspeedf eth0}"))
-    local upspeed = tonumber(conky_parse("${upspeedf wlan0}")) + tonumber(conky_parse("${upspeedf eth0}"))
+    local downspeed = tonumber(conky_parse("${downspeedf eth0}"))
+    local upspeed = tonumber(conky_parse("${upspeedf eth0}"))
+
+    local down_value = math.log(downspeed+1)*8
+    local up_value = math.log(upspeed+1)*8
+
+    ----------------------------------------------
+    -- fleche gauche : template
+    cairo_move_to (cr, cx - 8.0 - 16.0, cy + 32.0)
+    cairo_line_to (cr, cx - 8.0 - 16.0, cy - 8.0)
+    cairo_line_to (cr, cx - 12.0 - 16.0, cy - 8.0)
+    cairo_line_to (cr, cx - 16.0, cy - 32.0)
+    cairo_line_to (cr, cx + 12.0 - 16.0, cy - 8.0)
+    cairo_line_to (cr, cx + 8.0 - 16.0, cy - 8.0)
+    cairo_line_to (cr, cx + 8.0 - 16.0, cy + 32.0)
+    cairo_close_path (cr)
+
+    cairo_set_source_rgba (cr, 236/255, 240/255, 241/255,1)
+    cairo_fill_preserve (cr)
+    cairo_set_source_rgba (cr, 127/255, 140/255, 141/255,1)
+    cairo_stroke (cr)
+
+    -----------------------------------------------
+    -- fleche droite : template
+    cairo_move_to (cr, cx + 8.0 + 16.0, cy - 32.0)
+    cairo_line_to (cr, cx + 8.0 + 16.0, cy + 8.0)
+    cairo_line_to (cr, cx + 12.0 + 16.0, cy + 8.0)
+    cairo_line_to (cr, cx + 16.0, cy + 32.0)
+    cairo_line_to (cr, cx - 12.0 + 16.0, cy + 8.0)
+    cairo_line_to (cr, cx - 8.0 + 16.0, cy + 8.0)
+    cairo_line_to (cr, cx - 8.0 + 16.0, cy - 32.0)
+    cairo_close_path (cr)
+
+    cairo_set_source_rgba (cr, 236/255, 240/255, 241/255,1)
+    cairo_fill_preserve (cr)
+    cairo_set_source_rgba (cr, 127/255, 140/255, 141/255,1)
+    cairo_stroke (cr)
+
+    ----------------------------------------------
+    -- fleche gauche : contenu
+    if up_value<62.5 then -- Remplir le rectangle
+        cairo_move_to (cr, cx - 8.0 - 16.0, cy + 32.0)
+        cairo_line_to (cr, cx - 8.0 - 16.0, cy + 32.0 - up_value*0.64)
+        cairo_line_to (cr, cx + 8.0 - 16.0, cy + 32.0 - up_value*0.64)
+        cairo_line_to (cr, cx + 8.0 - 16.0, cy + 32.0)
+        cairo_close_path (cr)
+    else -- remplir le triangle
+        cairo_move_to (cr, cx - 8.0 - 16.0, cy + 32.0)
+        cairo_line_to (cr, cx - 8.0 - 16.0, cy - 8.0)
+        cairo_line_to (cr, cx - 8.0 - 16.0 - 4.0, cy - 8.0)
+        cairo_line_to (cr, cx - 16.0 -0.5*(100-up_value)*0.64, cy + 32.0 - up_value*0.64)
+        cairo_line_to (cr, cx - 16.0 +0.5*(100-up_value)*0.64, cy + 32.0 - up_value*0.64)
+        cairo_line_to (cr, cx + 8.0 - 16.0 + 4.0, cy - 8.0)
+        cairo_line_to (cr, cx + 8.0 - 16.0, cy - 8.0)
+        cairo_line_to (cr, cx + 8.0 - 16.0, cy + 32.0)
+        cairo_close_path (cr)
+    end
+
+    cairo_set_source_rgba (cr, 241/255, 196/255, 15/255,1)
+    cairo_fill_preserve (cr)
+    cairo_set_source_rgba (cr, 243/255, 156/255, 18/255,1)
+    cairo_stroke (cr)
+
+    -----------------------------------------------
+    -- fleche droite : contenu
+    if down_value<37.5 then -- remplir le triangle
+        cairo_move_to (cr, cx + 16.0, cy + 32.0)
+        cairo_line_to (cr, cx + 16.0 - 0.5*down_value*0.64, cy + 32.0 - down_value*0.64)
+        cairo_line_to (cr, cx + 16.0 + 0.5*down_value*0.64, cy + 32.0 - down_value*0.64)
+        cairo_close_path (cr)
+    else -- remplir le rectangle
+        cairo_move_to (cr, cx + 16.0, cy + 32.0)
+        cairo_line_to (cr, cx + 4.0, cy + 8.0)
+        cairo_line_to (cr, cx + 8.0, cy + 8.0)
+        cairo_line_to (cr, cx + 8.0, cy + 32.0 - down_value*0.64)
+        cairo_line_to (cr, cx + 8.0 + 16.0, cy + 32.0 - down_value*0.64)
+        cairo_line_to (cr, cx + 8.0 + 16.0, cy + 8.0)
+        cairo_line_to (cr, cx + 8.0 + 16.0 + 4.0, cy + 8.0)
+        cairo_close_path (cr)
+    end
+
+    cairo_set_source_rgba (cr, 26/255, 188/255, 156/255,1)
+    cairo_fill_preserve (cr)
+    cairo_set_source_rgba (cr, 22/255, 160/255, 133/255,1)
+    cairo_stroke (cr)
+
+    return
+end
+
+function conky_NET_arrows_wifi (cx_str, cy_str)
+    local cx = tonumber(cx_str) -- absisce du centre de l'icone
+    local cy = tonumber(cy_str) -- ordonnee du centre de l'icone
+
+    local downspeed = tonumber(conky_parse("${downspeedf wlan0}"))
+    local upspeed = tonumber(conky_parse("${upspeedf wlan0}"))
 
     local down_value = math.log(downspeed+1)*8
     local up_value = math.log(upspeed+1)*8
