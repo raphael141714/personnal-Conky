@@ -25,7 +25,7 @@ conky.config = {
     gap_y = 8,
     default_outline_color = 'white',
     default_shade_color = 'white',
-    lua_load = "$HOME/git/personnal-conky/conky/graphs_mini.lua",
+    lua_load = "$HOME/.conky/start_conky.lua",
     lua_draw_hook_pre = 'conky_main',
     draw_borders = false,
     draw_graph_borders = true,
@@ -37,30 +37,6 @@ conky.config = {
 }
 
 conky.text = [[
-${lua conky_CPU_square 48 34}
-${lua conky_double_RAM_circle 48 118}
-${lua conky_NET_arrows_wifi 48 198}
-${lua conky_TEMP_meter 48 278}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
