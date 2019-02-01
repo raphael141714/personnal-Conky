@@ -1,5 +1,5 @@
 require 'cairo'
-require 'graphs'
+require 'rework.graphs'
 
 
 function init_cairo()

@@ -1,6 +1,6 @@
 require 'cairo'
-require 'settings'
-require 'tools'
+require 'rework.settings'
+require 'rework.tools'
 
 function conky_CPU_square(cx_str, cy_str)
     cairo_set_source_rgba (cr, getColor(rgba_background_a1))
