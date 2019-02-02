@@ -24,10 +24,10 @@ function conky_main()
         return ""
     end
 
-    conky_CPU_square(gap_x, gap_y)
-    conky_double_RAM_circle(gap_x, gap_y + spacing*1)
-    conky_NET_arrows_wifi(gap_x, gap_y + spacing*2)
-    conky_TEMP_meter(gap_x, gap_y + spacing*3)
+    conky_CPU_square (gap_x, gap_y)
+    conky_double_RAM_circle (gap_x, gap_y + spacing*1)
+    conky_NET_graph (gap_x, gap_y + spacing*2)
+    conky_TEMP_meter (gap_x, gap_y + spacing*3)
 
 return ""
 end

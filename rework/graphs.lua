@@ -57,7 +57,6 @@ function conky_CPU_square(cx_str, cy_str)
     return ""
 end
 
-
 function conky_double_RAM_circle(cx_str, cy_str)
     local cx = tonumber(cx_str) -- absisce du centre de l'icone
     local cy = tonumber(cy_str) -- ordonnee du centre de l'icone
@@ -108,25 +107,51 @@ function conky_double_RAM_circle(cx_str, cy_str)
     return ""
 end
 
-function conky_NET_arrows_wifi (cx_str, cy_str) 
+function conky_NET_graph (cx_str, cy_str)
+
+    local sh_output = io.popen("ip -o link show | awk '{print $2,$9}' | grep UP | awk '{gsub(\":\",\"\"); print $1}'")
+    local up_interface_name = sh_output:read("*a")
+    sh_output:close()
+
+    if (up_interface_name == "") then   conky_NET_disconnected(cx_str, cy_str)
+    else conky_NET_arrows(cx_str, cy_str, up_interface_name)
+    end
+
+    return ""
+
+end
+
+function conky_NET_disconnected (cx_str, cy_str)
+    local cx = tonumber(cx_str) -- absisce du centre de l'icone
+    local cy = tonumber(cy_str) -- ordonnee du centre de l'icone
+
+    cairo_move_to (cr, cx - size_coef*16, cy - size_coef*16)
+    cairo_line_to (cr, cx + size_coef*16.0, cy + size_coef*16.0)
+    cairo_move_to (cr, cx + size_coef*16, cy - size_coef*16)
+    cairo_line_to (cr, cx - size_coef*16.0, cy + size_coef*16.0)
+
+    cairo_set_source_rgba (cr, getColor(rgba_background_a0))
+    cairo_fill_preserve (cr)
+    cairo_set_source_rgba (cr, getColor(rgba_drawing))
+    cairo_stroke (cr)
+
+    return ""
+end
+
+function conky_NET_arrows (cx_str, cy_str, interface_name) 
     local cx = tonumber(cx_str) -- absisce du centre de l'icone
     local cy = tonumber(cy_str) -- ordonnee du centre de l'icone
 
     local arrow_color = wifi_ssid_color()
 
     if arrow_color == 0 then
-        cairo_move_to (cr, cx - size_coef*16, cy - size_coef*16)
-        cairo_line_to (cr, cx + size_coef*16.0, cy + size_coef*16.0)
-        cairo_move_to (cr, cx + size_coef*16, cy - size_coef*16)
-        cairo_line_to (cr, cx - size_coef*16.0, cy + size_coef*16.0)
-
-        cairo_set_source_rgba (cr, getColor(rgba_background_a0))
-        cairo_fill_preserve (cr)
-        cairo_set_source_rgba (cr, getColor(rgba_drawing))
-        cairo_stroke (cr)
+        conky_NET_disconnected(cx_str, cy_str)
     else
-        local downspeed = tonumber(conky_parse("${downspeedf wlo1}"))
-        local upspeed = tonumber(conky_parse("${upspeedf wlo1}"))
+        local downspeed_keyword = "${downspeedf " .. interface_name .. "}"
+        local upspeed_keyword = "${upspeedf " .. interface_name .. "}"
+
+        local downspeed = tonumber(conky_parse(downspeed_keyword))
+        local upspeed = tonumber(conky_parse(upspeed_keyword))
 
         local down_value = math.log(downspeed+1)*8
         local up_value = math.log(upspeed+1)*8
