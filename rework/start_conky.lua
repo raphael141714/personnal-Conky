@@ -24,10 +24,6 @@ function conky_main()
         return ""
     end
 
-    local gap_x = 48
-    local gap_y = 34
-    local spacing = 80
-
     conky_CPU_square(gap_x, gap_y)
     conky_double_RAM_circle(gap_x, gap_y + spacing*1)
     conky_NET_arrows_wifi(gap_x, gap_y + spacing*2)

@@ -14,12 +14,12 @@ function conky_CPU_square(cx_str, cy_str)
 
     -----------------------------------------------------
     -- Octogone de 100%
-    cairo_move_to (cr, cx + 32.0, cy)
-    cairo_line_to (cr, cx + 32.0, cy)
-    cairo_line_to (cr, cx, cy + 32.0)
-    cairo_line_to (cr, cx - 32.0, cy)
-    cairo_line_to (cr, cx, cy - 32.0)
-    cairo_line_to (cr, cx + 32.0, cy)
+    cairo_move_to (cr, cx + size_coef*32.0, cy)
+    cairo_line_to (cr, cx + size_coef*32.0, cy)
+    cairo_line_to (cr, cx, cy + size_coef*32.0)
+    cairo_line_to (cr, cx - size_coef*32.0, cy)
+    cairo_line_to (cr, cx, cy - size_coef*32.0)
+    cairo_line_to (cr, cx + size_coef*32.0, cy)
 
     -- Dessin des 100%
     cairo_set_source_rgba (cr, getColor(rgba_background_a1))  -- Inside color
@@ -28,12 +28,12 @@ function conky_CPU_square(cx_str, cy_str)
 	cairo_stroke (cr)
 
     -- Octogone de 50%
-    cairo_move_to (cr, cx + 16.0, cy)
-    cairo_line_to (cr, cx + 16.0, cy)
-    cairo_line_to (cr, cx, cy + 16.0)
-    cairo_line_to (cr, cx - 16.0, cy)
-    cairo_line_to (cr, cx, cy - 16.0)
-    cairo_line_to (cr, cx + 16.0, cy)
+    cairo_move_to (cr, cx + size_coef*16.0, cy)
+    cairo_line_to (cr, cx + size_coef*16.0, cy)
+    cairo_line_to (cr, cx, cy + size_coef*16.0)
+    cairo_line_to (cr, cx - size_coef*16.0, cy)
+    cairo_line_to (cr, cx, cy - size_coef*16.0)
+    cairo_line_to (cr, cx + size_coef*16.0, cy)
 
     -- Dessin des 50%
     cairo_set_source_rgba (cr, getColor(rgba_background_a1))
@@ -42,11 +42,11 @@ function conky_CPU_square(cx_str, cy_str)
     cairo_stroke (cr)
 
     -- Octogone des CPU
-    cairo_line_to (cr, cx + 32.0*(cpu1/100), cy)
-    cairo_line_to (cr, cx, cy + 32.0*(cpu2/100))
-    cairo_line_to (cr, cx - 32.0*(cpu3/100), cy)
-    cairo_line_to (cr, cx, cy - 32.0*(cpu4/100))
-    cairo_line_to (cr, cx + 32.0*(cpu1/100), cy)
+    cairo_line_to (cr, cx + size_coef*32.0*(cpu1/100), cy)
+    cairo_line_to (cr, cx, cy + size_coef*32.0*(cpu2/100))
+    cairo_line_to (cr, cx - size_coef*32.0*(cpu3/100), cy)
+    cairo_line_to (cr, cx, cy - size_coef*32.0*(cpu4/100))
+    cairo_line_to (cr, cx + size_coef*32.0*(cpu1/100), cy)
 
     -- Dessin du graph
     cairo_set_source_rgba (cr, getColor(rgba_accent_1))
@@ -72,8 +72,8 @@ function conky_double_RAM_circle(cx_str, cy_str)
 
 	-- premiere partie : Cercle exterieur de RAM
     cairo_move_to (cr, cx, cy)
-    cairo_line_to (cr, cx + 32.0, cy)
-	cairo_arc (cr,cx,cy,32.0,start_angle,end_angle)
+    cairo_line_to (cr, cx + size_coef*32.0, cy)
+	cairo_arc (cr,cx,cy,size_coef*32.0,start_angle,end_angle)
     cairo_close_path(cr)
 
     cairo_set_source_rgba (cr, getColor(rgba_accent_1))
@@ -83,7 +83,7 @@ function conky_double_RAM_circle(cx_str, cy_str)
 
     -----------------------------------------------------
     -- Cercle derrière celui de la SWAP
-    cairo_arc (cr, cx, cy, 24.0, 0, math.pi*2.0)
+    cairo_arc (cr, cx, cy, size_coef*24.0, 0, math.pi*2.0)
 
     cairo_set_source_rgba (cr, getColor(rgba_background_a1))
     cairo_fill_preserve (cr)
@@ -97,7 +97,7 @@ function conky_double_RAM_circle(cx_str, cy_str)
     end_angle=math.pi*0.5 + alpha
 
     -- deuxieme partie : Cercle interieur de SWAP
-    cairo_arc (cr, cx, cy, 24.0, start_angle, end_angle)
+    cairo_arc (cr, cx, cy, size_coef*24.0, start_angle, end_angle)
     cairo_close_path(cr)
 
     cairo_set_source_rgba (cr, getColor(rgba_accent_1))
@@ -115,39 +115,41 @@ function conky_NET_arrows_wifi (cx_str, cy_str)
     local arrow_color = wifi_ssid_color()
 
     if arrow_color == 0 then
-        cairo_move_to (cr, cx - 16, cy - 16)
-        cairo_line_to (cr, cx + 16.0, cy + 16.0)
-        cairo_move_to (cr, cx + 16, cy - 16)
-        cairo_line_to (cr, cx - 16.0, cy + 16.0)
+        cairo_move_to (cr, cx - size_coef*16, cy - size_coef*16)
+        cairo_line_to (cr, cx + size_coef*16.0, cy + size_coef*16.0)
+        cairo_move_to (cr, cx + size_coef*16, cy - size_coef*16)
+        cairo_line_to (cr, cx - size_coef*16.0, cy + size_coef*16.0)
 
         cairo_set_source_rgba (cr, getColor(rgba_background_a0))
         cairo_fill_preserve (cr)
-        cairo_set_source_rgba (cr, 127/255, 140/255, 141/255, 1)
+        cairo_set_source_rgba (cr, getColor(rgba_drawing))
         cairo_stroke (cr)
     else
         local downspeed = tonumber(conky_parse("${downspeedf wlo1}"))
         local upspeed = tonumber(conky_parse("${upspeedf wlo1}"))
 
-        local down_value = math.log(downspeed+1)*8
-        local up_value = math.log(upspeed+1)*8
+        local down_value = size_coef*math.log(downspeed+1)*8
+        local up_value = size_coef*math.log(upspeed+1)*8
+
+        local arrow_spacing = size_coef*20
 
         ----------------------------------------------
         -- fleche gauche : contenu
         if up_value<62.5 then -- Remplir le rectangle
-            cairo_move_to (cr, cx - 6.0 - 16.0, cy + 32.0)
-            cairo_line_to (cr, cx - 6.0 - 16.0, cy + 32.0 - up_value*0.64)
-            cairo_line_to (cr, cx + 6.0 - 16.0, cy + 32.0 - up_value*0.64)
-            cairo_line_to (cr, cx + 6.0 - 16.0, cy + 32.0)
+            cairo_move_to (cr, cx - size_coef*6.0 - arrow_spacing, cy + size_coef*32.0)
+            cairo_line_to (cr, cx - size_coef*6.0 - arrow_spacing, cy + size_coef*32.0 - up_value*0.64)
+            cairo_line_to (cr, cx + size_coef*6.0 - arrow_spacing, cy + size_coef*32.0 - up_value*0.64)
+            cairo_line_to (cr, cx + size_coef*6.0 - arrow_spacing, cy + size_coef*32.0)
             cairo_close_path (cr)
         else -- remplir le triangle
-            cairo_move_to (cr, cx - 8.0 - 16.0, cy + 32.0)
-            cairo_line_to (cr, cx - 8.0 - 16.0, cy - 8.0)
-            cairo_line_to (cr, cx - 8.0 - 16.0 - 4.0, cy - 8.0)
-            cairo_line_to (cr, cx - 16.0 -0.5*(100-up_value)*0.64, cy + 32.0 - up_value*0.64)
-            cairo_line_to (cr, cx - 16.0 +0.5*(100-up_value)*0.64, cy + 32.0 - up_value*0.64)
-            cairo_line_to (cr, cx + 8.0 - 16.0 + 4.0, cy - 8.0)
-            cairo_line_to (cr, cx + 8.0 - 16.0, cy - 8.0)
-            cairo_line_to (cr, cx + 8.0 - 16.0, cy + 32.0)
+            cairo_move_to (cr, cx - size_coef*8.0 - arrow_spacing, cy + size_coef*32.0)
+            cairo_line_to (cr, cx - size_coef*8.0 - arrow_spacing, cy - size_coef*8.0)
+            cairo_line_to (cr, cx - size_coef*12.0 - arrow_spacing, cy - size_coef*8.0)
+            cairo_line_to (cr, cx - arrow_spacing - 0.5*(100-up_value)*0.64, cy + size_coef*32.0 - up_value*0.64)
+            cairo_line_to (cr, cx - arrow_spacing + 0.5*(100-up_value)*0.64, cy + size_coef*32.0 - up_value*0.64)
+            cairo_line_to (cr, cx + size_coef*12.0 - arrow_spacing, cy - size_coef*8.0)
+            cairo_line_to (cr, cx + size_coef*8.0 - arrow_spacing, cy - size_coef*8.0)
+            cairo_line_to (cr, cx + size_coef*8.0 - arrow_spacing, cy + size_coef*32.0)
             cairo_close_path (cr)
         end
 
@@ -159,18 +161,18 @@ function conky_NET_arrows_wifi (cx_str, cy_str)
         -----------------------------------------------
         -- fleche droite : contenu
         if down_value<37.5 then -- remplir le triangle
-            cairo_move_to (cr, cx + 16.0, cy + 32.0)
-            cairo_line_to (cr, cx + 16.0 - 0.5*down_value*0.64, cy + 32.0 - down_value*0.64)
-            cairo_line_to (cr, cx + 16.0 + 0.5*down_value*0.64, cy + 32.0 - down_value*0.64)
+            cairo_move_to (cr, cx + arrow_spacing, cy + size_coef*32.0)
+            cairo_line_to (cr, cx + arrow_spacing - 0.5*down_value*0.64, cy + size_coef*32.0 - down_value*0.64)
+            cairo_line_to (cr, cx + arrow_spacing + 0.5*down_value*0.64, cy + size_coef*32.0 - down_value*0.64)
             cairo_close_path (cr)
         else -- remplir le rectangle
-            cairo_move_to (cr, cx + 16.0, cy + 32.0)
-            cairo_line_to (cr, cx + 4.0, cy + 8.0)
-            cairo_line_to (cr, cx + 10.0, cy + 8.0)
-            cairo_line_to (cr, cx + 10.0, cy + 32.0 - down_value*0.64)
-            cairo_line_to (cr, cx + 6.0 + 16.0, cy + 32.0 - down_value*0.64)
-            cairo_line_to (cr, cx + 6.0 + 16.0, cy + 8.0)
-            cairo_line_to (cr, cx + 6.0 + 16.0 + 4.0, cy + 8.0)
+            cairo_move_to (cr, cx + arrow_spacing, cy + size_coef*32.0)
+            cairo_line_to (cr, cx - size_coef*12 + arrow_spacing, cy + size_coef*8.0)
+            cairo_line_to (cr, cx - size_coef*6.0 + arrow_spacing, cy + size_coef*8.0)
+            cairo_line_to (cr, cx - size_coef*6.0 + arrow_spacing, cy + size_coef*32.0 - down_value*0.64)
+            cairo_line_to (cr, cx + size_coef*6.0 + arrow_spacing, cy + size_coef*32.0 - down_value*0.64)
+            cairo_line_to (cr, cx + size_coef*6.0 + arrow_spacing, cy + size_coef*8.0)
+            cairo_line_to (cr, cx + size_coef*12 + arrow_spacing, cy + size_coef*8.0)
             cairo_close_path (cr)
         end
 
@@ -181,13 +183,13 @@ function conky_NET_arrows_wifi (cx_str, cy_str)
 
         ----------------------------------------------
         -- fleche gauche : template
-        cairo_move_to (cr, cx - 6.0 - 16.0, cy + 32.0)
-        cairo_line_to (cr, cx - 6.0 - 16.0, cy - 8.0)
-        cairo_line_to (cr, cx - 12.0 - 16.0, cy - 8.0)
-        cairo_line_to (cr, cx - 16.0, cy - 32.0)
-        cairo_line_to (cr, cx + 12.0 - 16.0, cy - 8.0)
-        cairo_line_to (cr, cx + 6.0 - 16.0, cy - 8.0)
-        cairo_line_to (cr, cx + 6.0 - 16.0, cy + 32.0)
+        cairo_move_to (cr, cx - size_coef*6.0 - arrow_spacing, cy + size_coef*32.0)
+        cairo_line_to (cr, cx - size_coef*6.0 - arrow_spacing, cy - size_coef*8.0)
+        cairo_line_to (cr, cx - size_coef*12.0 - arrow_spacing, cy - size_coef*8.0)
+        cairo_line_to (cr, cx - arrow_spacing, cy - size_coef*32.0)
+        cairo_line_to (cr, cx + size_coef*12.0 - arrow_spacing, cy - size_coef*8.0)
+        cairo_line_to (cr, cx + size_coef*6.0 - arrow_spacing, cy - size_coef*8.0)
+        cairo_line_to (cr, cx + size_coef*6.0 - arrow_spacing, cy + size_coef*32.0)
         cairo_close_path (cr)
 
         cairo_set_source_rgba (cr, getColor(rgba_background_a0))
@@ -197,13 +199,13 @@ function conky_NET_arrows_wifi (cx_str, cy_str)
 
         -----------------------------------------------
         -- fleche droite : template
-        cairo_move_to (cr, cx + 6.0 + 16.0, cy - 32.0)
-        cairo_line_to (cr, cx + 6.0 + 16.0, cy + 8.0)
-        cairo_line_to (cr, cx + 12.0 + 16.0, cy + 8.0)
-        cairo_line_to (cr, cx + 16.0, cy + 32.0)
-        cairo_line_to (cr, cx - 12.0 + 16.0, cy + 8.0)
-        cairo_line_to (cr, cx - 6.0 + 16.0, cy + 8.0)
-        cairo_line_to (cr, cx - 6.0 + 16.0, cy - 32.0)
+        cairo_move_to (cr, cx + size_coef*6.0 + arrow_spacing, cy - size_coef*32.0)
+        cairo_line_to (cr, cx + size_coef*6.0 + arrow_spacing, cy + size_coef*8.0)
+        cairo_line_to (cr, cx + size_coef*12.0 + arrow_spacing, cy + size_coef*8.0)
+        cairo_line_to (cr, cx + arrow_spacing, cy + size_coef*32.0)
+        cairo_line_to (cr, cx - size_coef*12.0 + arrow_spacing, cy + size_coef*8.0)
+        cairo_line_to (cr, cx - size_coef*6.0 + arrow_spacing, cy + size_coef*8.0)
+        cairo_line_to (cr, cx - size_coef*6.0 + arrow_spacing, cy - size_coef*32.0)
         cairo_close_path (cr)
 
         cairo_set_source_rgba (cr, getColor(rgba_background_a0))
@@ -213,7 +215,7 @@ function conky_NET_arrows_wifi (cx_str, cy_str)
 
         -----------------------------------------------
         -- indicateur ssid
-        cairo_arc (cr, cx, cy, 4.0, 0, math.pi*2.0)
+        cairo_arc (cr, cx, cy, size_coef*4.0, 0, math.pi*2.0)
 
         cairo_set_source_rgba (cr, arrow_color[1], arrow_color[2], arrow_color[3], 1)
         cairo_fill_preserve (cr)
@@ -233,11 +235,13 @@ function conky_TEMP_meter (cx_str, cy_str)
     local gpu_temp = tonumber(sh_temp)
     sh_output:close()
 
+    local therm_spacing = size_coef*16
+
     --------------------------------------------------------------------------------------
     -- Thermometre de gauche : valeur
     if cpu_temp<46 then
-        cairo_arc (cr, cx - 16.0, cy + 24.0, 8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
-        cairo_arc (cr, cx - 16.0, cy + 24.0 - 8.0, 4.0, math.pi, math.pi*2.0)
+        cairo_arc (cr, cx - therm_spacing, cy + size_coef*24.0, size_coef*8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
+        cairo_arc (cr, cx - therm_spacing, cy + size_coef*16.0, size_coef*4.0, math.pi, math.pi*2.0)
         cairo_close_path (cr)
 
         cairo_set_source_rgba (cr, getColor(rgba_accent_1))
@@ -245,8 +249,8 @@ function conky_TEMP_meter (cx_str, cy_str)
         cairo_set_source_rgba (cr, getColor(rgba_accent_1))
         cairo_stroke (cr)
     elseif cpu_temp<90 then
-        cairo_arc (cr, cx - 16.0, cy + 24.0, 8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
-        cairo_arc (cr, cx - 16.0, cy + 24.0 - 8.0 - (cpu_temp-46.0), 4.0, math.pi, math.pi*2.0)
+        cairo_arc (cr, cx - therm_spacing, cy + size_coef*24.0, size_coef*8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
+        cairo_arc (cr, cx - therm_spacing, cy + size_coef*16.0 - (size_coef*cpu_temp-size_coef*46.0), size_coef*4.0, math.pi, math.pi*2.0)
         cairo_close_path (cr)
 
         cairo_set_source_rgba (cr, getColor(rgba_accent_1))
@@ -254,8 +258,8 @@ function conky_TEMP_meter (cx_str, cy_str)
         cairo_set_source_rgba (cr, getColor(rgba_accent_1))
         cairo_stroke (cr)
     else
-        cairo_arc (cr, cx - 16.0, cy + 24.0, 8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
-        cairo_arc (cr, cx - 16.0, cy + 24.0 - 8.0 - (44.0), 4.0, math.pi, math.pi*2.0)
+        cairo_arc (cr, cx - therm_spacing, cy + size_coef*24.0, size_coef*8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
+        cairo_arc (cr, cx - therm_spacing, cy - size_coef*28.0, size_coef*4.0, math.pi, math.pi*2.0)
         cairo_close_path (cr)
 
         cairo_set_source_rgba (cr, getColor(rgba_warning))
@@ -267,8 +271,8 @@ function conky_TEMP_meter (cx_str, cy_str)
     --------------------------------------------------------------------------------------
     -- Thermometre de droite : GPU
     if gpu_temp<46 then
-        cairo_arc (cr, cx + 16.0, cy + 24.0, 8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
-        cairo_arc (cr, cx + 16.0, cy + 24.0 - 8.0, 4.0, math.pi, math.pi*2.0)
+        cairo_arc (cr, cx + therm_spacing, cy + size_coef*24.0, size_coef*8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
+        cairo_arc (cr, cx + therm_spacing, cy + size_coef*16.0, size_coef*4.0, math.pi, math.pi*2.0)
         cairo_close_path (cr)
 
         cairo_set_source_rgba (cr, getColor(rgba_accent_1))
@@ -276,8 +280,8 @@ function conky_TEMP_meter (cx_str, cy_str)
         cairo_set_source_rgba (cr, getColor(rgba_accent_1))
         cairo_stroke (cr)
     elseif gpu_temp<90 then
-        cairo_arc (cr, cx + 16.0, cy + 24.0, 8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
-        cairo_arc (cr, cx + 16.0, cy + 24.0 - 8.0 -  (gpu_temp-46.0), 4.0, math.pi, math.pi*2.0)
+        cairo_arc (cr, cx + therm_spacing, cy + size_coef*24.0, size_coef*8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
+        cairo_arc (cr, cx + therm_spacing, cy + size_coef*16.0 - (size_coef*gpu_temp-size_coef*46.0), size_coef*4.0, math.pi, math.pi*2.0)
         cairo_close_path (cr)
 
         cairo_set_source_rgba (cr, getColor(rgba_accent_1))
@@ -285,8 +289,8 @@ function conky_TEMP_meter (cx_str, cy_str)
         cairo_set_source_rgba (cr, getColor(rgba_accent_1))
         cairo_stroke (cr)
     else -- Disque > 70 degres
-        cairo_arc (cr, cx + 16.0, cy + 24.0, 8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
-        cairo_arc (cr, cx + 16.0, cy + 24.0 - 8.0 - (44.0), 4.0, math.pi, math.pi*2.0)
+        cairo_arc (cr, cx + therm_spacing, cy + size_coef*24.0, size_coef*8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
+        cairo_arc (cr, cx + therm_spacing, cy - size_coef*28.0, size_coef*4.0, math.pi, math.pi*2.0)
         cairo_close_path (cr)
 
         -- Dessin du disque > 70 degres
@@ -298,9 +302,9 @@ function conky_TEMP_meter (cx_str, cy_str)
 
     --------------------------------------------------------------------------------------
     -- Thermometre de gauche : CPU
-    cairo_arc (cr, cx - 16.0, cy + 24.0, 8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
-    cairo_line_to (cr, cx - 16.0 - 4.0, cy - 32.0 + 4.0)
-    cairo_arc (cr, cx - 16.0, cy - 32.0 + 4.0, 4.0, math.pi, math.pi*2.0)
+    cairo_arc (cr, cx - therm_spacing, cy + size_coef*24.0, size_coef*8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
+    cairo_line_to (cr, cx - therm_spacing - size_coef*4.0, cy - size_coef*28.0)
+    cairo_arc (cr, cx - therm_spacing, cy - size_coef*28.0, size_coef*4.0, math.pi, math.pi*2.0)
     cairo_close_path (cr)
 
     cairo_set_source_rgba (cr, getColor(rgba_background_a0))
@@ -310,9 +314,9 @@ function conky_TEMP_meter (cx_str, cy_str)
 
     --------------------------------------------------------------------------------------
     -- Thermometre de droite : GPU
-    cairo_arc (cr, cx + 16.0, cy + 24.0, 8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
-    cairo_line_to (cr, cx + 16.0 - 4.0, cy - 32.0 + 4.0)
-    cairo_arc (cr, cx + 16.0, cy - 32.0 + 4.0, 4.0, math.pi, math.pi*2.0)
+    cairo_arc (cr, cx + therm_spacing, cy + size_coef*24.0, size_coef*8.0, (-0.5+(1/6))*math.pi, (-0.5-(1/6))*math.pi)
+    cairo_line_to (cr, cx + therm_spacing - size_coef*4.0, cy - size_coef*28.0)
+    cairo_arc (cr, cx + therm_spacing, cy - size_coef*28.0, size_coef*4.0, math.pi, math.pi*2.0)
     cairo_close_path (cr)
 
     cairo_set_source_rgba (cr, getColor(rgba_background_a0))
